@@ -81,7 +81,11 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    Meds@Home
+                </div>
+
+                <div class="subtitle m-b-md">
+                    The simple app to track the meds you have at home!
                 </div>
 
                 <div class="links">
