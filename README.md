@@ -37,4 +37,6 @@ Then just run these commands to install dependencies:
 * composer install
 * npm install
 
+Edit the `.env` file on the root of the project and configure database connection settings.
+
 Now point a browser to the domain you configured on the `sites` section of the `Homestead.yaml` file and you should see the landing page.

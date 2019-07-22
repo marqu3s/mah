@@ -12,4 +12,19 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+    .sass('resources/sass/app.scss', 'public/css')
+    .extract(['axios', 'bootstrap', 'jquery', 'lodash', 'popper.js', 'vue']);
+
+if (!mix.inProduction()) {
+    mix.sourceMaps();
+    mix.browserSync({
+        proxy: 'mah.test',
+        host: 'mah.test',
+        open: false
+    });
+}
+
+if (mix.inProduction()) {
+    mix.disableNotifications();
+    mix.version();
+}
