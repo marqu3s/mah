@@ -18,7 +18,8 @@ class CreateMedicinesTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('name', 255);
             $table->string('format', 30);
-            $table->char('exp_date', 5);
+            $table->year('exp_year');
+            $table->unsignedTinyInteger('exp_month');
             $table->string('available_qty', 30);
             $table->timestamps();
 

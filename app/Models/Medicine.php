@@ -12,6 +12,6 @@ class Medicine extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'name', 'format', 'exp_date', 'available_qty',
+        'user_id', 'name', 'format', 'exp_year', 'exp_month', 'available_qty',
     ];
 }

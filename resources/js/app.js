@@ -7,6 +7,15 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+window.Swal = require('sweetalert2');
+
+window.Toast = window.Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+});
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -32,6 +41,14 @@ const app = new Vue({
     el: '#app',
 });
 
-window.axios.get('/api/medicine').then(data => {
+/*Swal.fire({
+    title: 'Error!',
+    text: 'Do you want to continue',
+    type: 'error',
+    confirmButtonText: 'Cool'
+});*/
+
+
+/*window.axios.get('/api/medicine').then(data => {
     console.log(data);
-});
+});*/

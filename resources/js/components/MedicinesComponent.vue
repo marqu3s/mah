@@ -2,10 +2,19 @@
     <div>
         <h2>My Medicines</h2>
         <ul class="list-group">
-            <li v-for="med in medicineList" class="list-group-item" @click="getMedicine(med.id)">{{ med.name }}</li>
+            <li v-for="med in medicineList" class="list-group-item medicine" @click="getMedicine(med.id)">
+                <div class="float-left">
+                    {{ med.name }}<br>
+                    <span class="badge badge-secondary">{{ med.format }}</span>
+                </div>
+                <div class="float-right">
+                    Qty: {{ med.available_qty}}<br>
+                    <span class="badge badge-secondary">Exp: {{ med.exp_year}}/{{ med.exp_month}}</span>
+                </div>
+            </li>
         </ul>
-        <div class="text-center">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#modal-medicine">Add</button>
+        <div class="text-right" style="margin-top: 15px;">
+            <button class="btn btn-primary" @click="newMedicine()">Add</button>
         </div>
 
         <div id="modal-medicine" class="modal" tabindex="-1" role="dialog">
@@ -30,16 +39,33 @@
                                     <option v-for="item in formatsList" :key="item.value" :value="item.value">{{ item.label }}</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="exp_date">Expire date</label>
-                                <input type="text" class="form-control" id="exp_date" v-model="medicine.exp_date">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="exp_year">Expire year</label>
+                                        <input type="text" class="form-control" id="exp_year" v-model="medicine.exp_year">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="exp_month">Expire month</label>
+                                        <select class="form-control" id="exp_month" v-model="medicine.exp_month">
+                                            <option v-for="item in months" :key="item.value" :value="item.value">{{ item.label }}</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
+
                             <div class="form-group">
                                 <label for="available_qty">Available quantity</label>
                                 <input type="text" class="form-control" id="available_qty" v-model="medicine.available_qty">
+                                <small class="form-text text-muted">
+                                    A number like 10, a percentage like 50% or anything you want.
+                                </small>
                             </div>
                         </div>
                         <div class="modal-footer">
+                            <button type="button" class="btn btn-danger mr-auto" @click="delMedicine" v-show="medicine.id!==null">Del</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>
@@ -62,7 +88,8 @@
                     id: null,
                     name: null,
                     format: null,
-                    exp_date: null,
+                    exp_year: null,
+                    exp_month: null,
                     available_qty: null
                 },
                 formatsList: [
@@ -75,6 +102,20 @@
                     {value: 'PATCH', label: 'Patch'},
                     {value: 'SUPPOSITORIE', label: 'Supositorie'},
                     {value: 'TABLET', label: 'Tablet'}
+                ],
+                months: [
+                    {value: 1, label: 'Jan'},
+                    {value: 2, label: 'Feb'},
+                    {value: 3, label: 'Mar'},
+                    {value: 4, label: 'Apr'},
+                    {value: 5, label: 'May'},
+                    {value: 6, label: 'Jun'},
+                    {value: 7, label: 'Jul'},
+                    {value: 8, label: 'Ago'},
+                    {value: 9, label: 'Sep'},
+                    {value: 10, label: 'Oct'},
+                    {value: 11, label: 'Nov'},
+                    {value: 12, label: 'Dec'},
                 ]
             }
         },
@@ -97,28 +138,30 @@
                     // this.loading = false
                 });
             },
+            clearMedicine: function () {
+                this.medicine.id = null;
+                this.medicine.name = null;
+                this.medicine.format = null;
+                this.medicine.exp_year = null;
+                this.medicine.exp_month = null;
+                this.medicine.available_qty = null;
+            },
             save: function () {
                 console.log('Saving medicine...');
-
-                // Parameters that will be sent with the request.
-                /*let params = {
-                    medicine: Object
-                }.assign({}, this.medicine);*/
 
                 // API request to save/update the user settings.
                 // this.loading = true;
                 // this.success = false;
                 window.axios.post('api/medicine', this.medicine).then((response) => {
                     if (response.data.success) {
-                        this.medicine.id = null;
-                        this.medicine.name = null;
-                        this.medicine.format = null;
-                        this.medicine.exp_date = null;
-                        this.medicine.available_qty = null;
+                        this.clearMedicine();
                         $('#modal-medicine').modal('hide');
                         this.fetchMedicines();
 
-                        // this.$toast.success(response.data.message);
+                        window.Toast.fire({
+                            type: 'success',
+                            title: 'Saved successfully!'
+                        });
                     } else {
                         // this.errored = true;
                     }
@@ -129,6 +172,10 @@
                     // this.loading = false
                 });
             },
+            newMedicine: function () {
+                this.clearMedicine();
+                $('#modal-medicine').modal('show');
+            },
             getMedicine: function (id) {
                 // API request to save/update the user settings.
                 // this.loading = true;
@@ -138,7 +185,8 @@
                         this.medicine.id = response.data.data.id;
                         this.medicine.name = response.data.data.name;
                         this.medicine.format = response.data.data.format;
-                        this.medicine.exp_date = response.data.data.exp_date;
+                        this.medicine.exp_year = response.data.data.exp_year;
+                        this.medicine.exp_month = response.data.data.exp_month;
                         this.medicine.available_qty = response.data.data.available_qty;
                         $('#modal-medicine').modal('show');
 
@@ -151,6 +199,30 @@
                     console.error(error);
                 }).finally(() => {
                     // this.loading = false
+                });
+            },
+            delMedicine: function () {
+                window.Swal.fire({
+                    type: 'warning',
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes!'
+                }).then((result) => {
+                    if (result.value) {
+                        window.axios.delete('api/medicine/' + this.medicine.id).then((response) => {
+                            if (response.data.success) {
+                                this.fetchMedicines();
+                                this.clearMedicine();
+                                $('#modal-medicine').modal('hide');
+
+                                window.Toast.fire({
+                                    type: 'success',
+                                    title: response.data.message
+                                });
+                            }
+                        });
+                    }
                 });
             }
         }

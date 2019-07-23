@@ -39,7 +39,8 @@ class MedicineController extends BaseController
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'format' => 'required',
-            'exp_date' => 'required',
+            'exp_year' => 'required',
+            'exp_month' => 'required',
             'available_qty' => 'required',
         ]);
 
@@ -58,17 +59,19 @@ class MedicineController extends BaseController
 
         $model->name = $request->input('name');
         $model->format = $request->input('format');
-        $model->exp_date = $request->input('exp_date');
+        $model->exp_year = $request->input('exp_year');
+        $model->exp_month = $request->input('exp_month');
         $model->available_qty = $request->input('available_qty');
         $model->save();
 
-        return $this->sendResponse($model->toArray(), 'Medicine saved successfully.');
+        return $this->sendResponse($model->toArray(), 'Saved successfully.');
     }
 
     /**
      * Display the specified resource.
      *
      * @param int $id
+     *
      * @return string
      */
     public function show($id)
@@ -77,6 +80,23 @@ class MedicineController extends BaseController
             ->Where('id', $id)
             ->first();
 
-        return $this->sendResponse($model->toArray(), 'Medicine loaded successfully.');
+        return $this->sendResponse($model->toArray(), 'Loaded successfully.');
+    }
+
+    /**
+     * Delete the specified resource.
+     *
+     * @param int $id
+     *
+     * @return string
+     */
+    public function destroy($id)
+    {
+        $result = Medicine::where('user_id', auth()->user()->id)
+            ->Where('id', $id)
+            ->first()
+            ->delete();
+
+        return $this->sendResponse($result, 'Deleted successfully.');
     }
 }
