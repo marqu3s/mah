@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\App;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        return view('app.home');
+    }
+
+    /**
+     * Show the settings page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function settings()
+    {
+        return view('app.settings');
     }
 }

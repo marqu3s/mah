@@ -1,0 +1,10 @@
+{
+    "UI_GENERAL": {
+        "save":  "Save"
+    },
+    "UI_SETTINGS": {
+        "settings": "Settings",
+        "language": "Language",
+        "initialBalance": "Initial balance"
+    }
+}

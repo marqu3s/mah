@@ -1,0 +1,10 @@
+{
+    "UI_GENERAL": {
+        "save":  "Salvar"
+    },
+    "UI_SETTINGS": {
+        "settings": "Configurações",
+        "language": "Idioma",
+        "initialBalance": "Saldo inicial"
+    }
+}
